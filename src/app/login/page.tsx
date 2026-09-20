@@ -345,7 +345,7 @@ function LoginForm() {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. John Doe"
+                      placeholder="e.g. Rahul Sharma"
                       value={newDummyName}
                       onChange={(e) => setNewDummyName(e.target.value)}
                       className="dummy-input"

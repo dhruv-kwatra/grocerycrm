@@ -21,9 +21,9 @@ export const DEFAULT_DUMMY_USERS: DummyUser[] = [
   {
     id: 101,
     tenantId: 1,
-    name: "Alex Mercer (Platform Staff)",
+    name: "Aarav Sharma (Platform Staff)",
     email: "admin@grocerycrm.com",
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+    avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
     isSuperAdmin: true,
     role: "superadmin",
     roleLabel: "Platform Staff",
@@ -32,7 +32,7 @@ export const DEFAULT_DUMMY_USERS: DummyUser[] = [
   {
     id: 102,
     tenantId: 1,
-    name: "Sarah Connor (Brand Lead)",
+    name: "Priya Sharma (Brand Lead)",
     email: "brand@grocerycrm.com",
     avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
     isSuperAdmin: false,
@@ -43,7 +43,7 @@ export const DEFAULT_DUMMY_USERS: DummyUser[] = [
   {
     id: 105,
     tenantId: 1,
-    name: "Marcus Vance (Distributor)",
+    name: "Vikram Malhotra (Distributor)",
     email: "distributor@grocerycrm.com",
     avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
     isSuperAdmin: false,
@@ -79,9 +79,9 @@ export const DEFAULT_DUMMY_USERS: DummyUser[] = [
   {
     id: 104,
     tenantId: 1,
-    name: "Elena Rostova (Store Associate)",
+    name: "Pooja Verma (Store Associate)",
     email: "associate@grocerycrm.com",
-    avatarUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
+    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
     isSuperAdmin: false,
     role: "store_associate",
     roleLabel: "Store Associate",
