@@ -16,7 +16,9 @@ const errMsg = (e: unknown, fallback: string) => (e instanceof Error && e.messag
 export async function tallyFootfall(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
   try {
     await apiSend("/api/retail/agent/footfall", "POST", { count: Number(formData.get("count") ?? 1) });
-    revalidatePath(AGENT);
+    revalidatePath("/retail/agent");
+    revalidatePath("/retail/manager");
+    revalidatePath("/retail/analytics");
     return { ok: true, message: "Footfall +1" };
   } catch (e) {
     return { ok: false, error: errMsg(e, "Could not record footfall") };
@@ -52,6 +54,8 @@ export async function saveWalkin(_prev: ActionResult | null, formData: FormData)
         revenue: formData.get("revenue") || undefined, // blank → backend auto-prices from SKU MRP
         paymentMethod: formData.get("paymentMethod") || undefined,
         walkinId: id,
+        customerName: formData.get("customerName") || undefined,
+        customerPhone: formData.get("customerPhone") || undefined,
       });
       await apiSend(`/api/retail/agent/walkins/${id}/outcome`, "POST", { outcome: "won", note });
     } else {
@@ -64,8 +68,16 @@ export async function saveWalkin(_prev: ActionResult | null, formData: FormData)
       });
     }
 
-    revalidatePath(AGENT, "layout");
-    return { ok: true, message: outcome === "sale" ? "Sale logged" : "Marked lost" };
+    revalidatePath("/retail/agent");
+    revalidatePath("/retail/agent", "layout");
+    revalidatePath("/retail/agent/walkin");
+    revalidatePath("/retail/customers");
+    revalidatePath("/retail/agent/customers");
+    revalidatePath("/retail/manager");
+    revalidatePath("/retail/orders");
+    revalidatePath("/retail/profile");
+    revalidatePath("/retail/analytics");
+    return { ok: true, message: outcome === "sale" ? "Sale logged" : "Walk-in saved" };
   } catch (e) {
     return { ok: false, error: errMsg(e, "Could not save the walk-in") };
   }

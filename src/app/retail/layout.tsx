@@ -4,6 +4,7 @@ import { apiGet } from "@/lib/api/server";
 import type { GroceryScope, GroceryRole } from "@/lib/retail/constants";
 import { RetailTopBar } from "./_components/RetailTopBar";
 import { AgentTabBar } from "./_components/AgentTabBar";
+import { StoreAssociateAskFloatingButton } from "./_components/StoreAssociateAskFloatingButton";
 import type { Sku } from "./agent/walkin/WalkinForm";
 import "./retail-theme.css";
 
@@ -54,7 +55,13 @@ export default async function RetailLayout({ children }: { children: React.React
       <main className={`flex-1 overflow-y-auto min-w-0 ${tabBar ? "pb-[calc(68px+env(safe-area-inset-bottom))] lg:pb-0" : ""}`}>
         {children}
       </main>
-      {tabBar && <AgentTabBar />}
+      {tabBar && (
+        <>
+          <StoreAssociateAskFloatingButton />
+          <AgentTabBar />
+        </>
+      )}
     </div>
   );
 }
+

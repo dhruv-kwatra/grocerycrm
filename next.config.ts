@@ -14,9 +14,9 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
-        // Only the retail module + backend-owned object storage. Everything else
-        // (core/crm/hrms/…) is intentionally absent — this app is retail-only.
+        // Only the retail module + backend-owned object storage + AI Intelligence module.
         { source: "/api/retail/:path*", destination: `${API_TARGET}/api/retail/:path*` },
+        { source: "/api/ai/:path*", destination: `${API_TARGET}/api/ai/:path*` },
         { source: "/api/uploads/serve", destination: `${API_TARGET}/api/uploads/serve` },
         { source: "/api/uploads/avatar", destination: `${API_TARGET}/api/uploads/avatar` },
       ],

@@ -1,5 +1,12 @@
+import os
+import sys
 import random
 from datetime import datetime, timedelta
+
+_backend_dir = os.path.dirname(os.path.abspath(__file__))
+if _backend_dir not in sys.path:
+    sys.path.insert(0, _backend_dir)
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -69,6 +76,84 @@ except Exception as e:
     CUSTOMERS = []
     ORDERS = []
 
+# Initialize CUSTOMERS if empty
+if not CUSTOMERS:
+    CUSTOMERS = [
+        {"id": 1, "name": "Rajesh Sharma", "phone": "9810420001", "email": "rajesh.sharma@example.com", "orders": 12, "spend": 45000, "aov": 3750, "lastPurchase": "2026-08-01", "recencyDays": 1, "segment": "Champions", "storeName": "Flagship Store Delhi", "units": 48, "saleCount": 12, "demoCount": 2, "lastPurchaseAt": "2026-08-01T14:30:00", "categoryPref": "Rice & Grains"},
+        {"id": 2, "name": "Priya Patel", "phone": "9810420002", "email": "priya.patel@example.com", "orders": 8, "spend": 28000, "aov": 3500, "lastPurchase": "2026-08-02", "recencyDays": 0, "segment": "Loyal Shopper", "storeName": "Flagship Store Delhi", "units": 26, "saleCount": 8, "demoCount": 1, "lastPurchaseAt": "2026-08-02T10:15:00", "categoryPref": "Dairy & Milk"},
+        {"id": 3, "name": "Amit Kumar", "phone": "9810420003", "email": "amit.kumar@example.com", "orders": 5, "spend": 14500, "aov": 2900, "lastPurchase": "2026-07-28", "recencyDays": 5, "segment": "Regular Shopper", "storeName": "Flagship Store Delhi", "units": 15, "saleCount": 5, "demoCount": 3, "lastPurchaseAt": "2026-07-28T16:45:00", "categoryPref": "Snacks & Drinks"},
+        {"id": 4, "name": "Sunita Verma", "phone": "9810420004", "email": "sunita.verma@example.com", "orders": 2, "spend": 3200, "aov": 1600, "lastPurchase": "2026-07-20", "recencyDays": 13, "segment": "New Shopper", "storeName": "Flagship Store Delhi", "units": 6, "saleCount": 2, "demoCount": 1, "lastPurchaseAt": "2026-07-20T11:20:00", "categoryPref": "Vegetables"},
+        {"id": 5, "name": "Vikram Malhotra", "phone": "9810420005", "email": "vikram.m@example.com", "orders": 1, "spend": 1200, "aov": 1200, "lastPurchase": "2026-07-02", "recencyDays": 31, "segment": "At Risk", "storeName": "Flagship Store Delhi", "units": 3, "saleCount": 1, "demoCount": 0, "lastPurchaseAt": "2026-07-02T18:00:00", "categoryPref": "Soft Drinks"},
+        {"id": 6, "name": "Ananya Roy", "phone": "9810420006", "email": "ananya.roy@example.com", "orders": 7, "spend": 21000, "aov": 3000, "lastPurchase": "2026-07-29", "recencyDays": 4, "segment": "Loyal Shopper", "storeName": "Flagship Store Delhi", "units": 22, "saleCount": 7, "demoCount": 2, "lastPurchaseAt": "2026-07-29T12:10:00", "categoryPref": "Wheat Flour"},
+        {"id": 7, "name": "Deepak Gupta", "phone": "9810420007", "email": "deepak.g@example.com", "orders": 4, "spend": 9800, "aov": 2450, "lastPurchase": "2026-07-25", "recencyDays": 8, "segment": "Regular Shopper", "storeName": "Flagship Store Delhi", "units": 14, "saleCount": 4, "demoCount": 1, "lastPurchaseAt": "2026-07-25T15:20:00", "categoryPref": "Cooking Oil"},
+        {"id": 8, "name": "Neha Joshi", "phone": "9810420008", "email": "neha.j@example.com", "orders": 3, "spend": 6500, "aov": 2166, "lastPurchase": "2026-07-22", "recencyDays": 11, "segment": "Regular Shopper", "storeName": "Flagship Store Delhi", "units": 9, "saleCount": 3, "demoCount": 0, "lastPurchaseAt": "2026-07-22T09:40:00", "categoryPref": "Biscuits"}
+    ]
+
+WALKINS = [
+    {
+        "id": 1,
+        "customerName": CUSTOMERS[0]["name"],
+        "customerPhone": CUSTOMERS[0]["phone"],
+        "status": "won",
+        "lastOutcome": "Purchased Weekly Groceries",
+        "party": "Family",
+        "budgetBand": "High",
+        "emiInterest": False,
+        "interestSkuId": PRODUCTS[0]["id"] if PRODUCTS else 1,
+        "skuName": PRODUCTS[0]["name"] if PRODUCTS else "Taj Mahal Tea",
+        "revenue": 1450,
+        "units": 2,
+        "closeProbability": 100,
+        "createdAt": (datetime.utcnow() - timedelta(hours=2)).isoformat(),
+        "storeId": 1,
+        "agentId": 1
+    },
+    {
+        "id": 2,
+        "customerName": CUSTOMERS[1]["name"],
+        "customerPhone": CUSTOMERS[1]["phone"],
+        "status": "lost",
+        "lastOutcome": "Item Out of Stock",
+        "party": "Solo",
+        "budgetBand": "Medium",
+        "emiInterest": False,
+        "interestSkuId": PRODUCTS[1]["id"] if len(PRODUCTS) > 1 else 2,
+        "skuName": PRODUCTS[1]["name"] if len(PRODUCTS) > 1 else "Tata Tea Premium",
+        "revenue": 0,
+        "units": 0,
+        "closeProbability": 0,
+        "createdAt": (datetime.utcnow() - timedelta(hours=1)).isoformat(),
+        "storeId": 1,
+        "agentId": 1
+    }
+]
+
+RETAIL_ORDERS = [
+    {
+        "id": 101,
+        "soldAt": (datetime.utcnow() - timedelta(hours=2)).isoformat(),
+        "units": 2,
+        "revenue": "1450",
+        "paymentMethod": "UPI",
+        "orderStatus": "confirmed",
+        "customerName": CUSTOMERS[0]["name"],
+        "customerPhone": CUSTOMERS[0]["phone"],
+        "productName": PRODUCTS[0]["name"] if PRODUCTS else "Taj Mahal Tea",
+        "agentName": "Cashier Rahul",
+        "skuId": PRODUCTS[0]["id"] if PRODUCTS else 1
+    }
+]
+
+AGENT_DAILY = {
+    "footfall": 250,
+    "demos": 120,
+    "bills": 85,
+    "units": 315,
+    "revenue": 145000,
+    "won": 85,
+    "lost": 20
+}
+
 # ---------------------------------------------------------
 # API ENDPOINTS
 # ---------------------------------------------------------
@@ -131,18 +216,27 @@ def get_scope(request: Request):
 
 @app.get("/api/retail/agent/summary")
 def agent_summary():
+    won_count = sum(1 for w in WALKINS if w.get("status") == "won")
+    lost_count = sum(1 for w in WALKINS if w.get("status") == "lost")
+    total_footfall = AGENT_DAILY["footfall"] + len(WALKINS) - 2
+    total_footfall = max(total_footfall, won_count + lost_count, 1)
+    total_bills = AGENT_DAILY["bills"] + sum(1 for w in WALKINS if w.get("status") == "won") - 1
+    total_units = AGENT_DAILY["units"] + sum(w.get("units", 0) for w in WALKINS if w.get("status") == "won") - 2
+    total_rev = AGENT_DAILY["revenue"] + sum(w.get("revenue", 0) for w in WALKINS if w.get("status") == "won") - 1450
+    conv = round((won_count / max(1, total_footfall)) * 100, 1) if total_footfall > 0 else 0.0
+
     return {
         "date": datetime.utcnow().isoformat(),
         "role": "floor_agent",
         "kpis": {
-            "demos": 120, 
-            "bills": 85,
-            "units": 315,
-            "revenue": 145000,
-            "footfall": 250,
-            "won": 85,
-            "lost": 20,
-            "conversion": 34.0
+            "demos": AGENT_DAILY["demos"],
+            "bills": max(0, total_bills),
+            "units": max(0, total_units),
+            "revenue": max(0, total_rev),
+            "footfall": max(1, total_footfall),
+            "won": won_count,
+            "lost": lost_count,
+            "conversion": conv
         },
         "targets": {
             "revenue": 200000,
@@ -154,34 +248,263 @@ def agent_summary():
 
 @app.get("/api/retail/agent/walkins")
 def agent_walkins(status: str = "closed"):
+    if status == "closed":
+        filtered = [w for w in WALKINS if w.get("status") in ("won", "lost")]
+    elif status == "open":
+        filtered = [w for w in WALKINS if w.get("status") == "open"]
+    else:
+        filtered = WALKINS
     return {
-        "walkins": [
-            {
-                "id": 1,
-                "customerName": CUSTOMERS[0]["name"],
-                "customerPhone": CUSTOMERS[0]["phone"],
-                "status": "won",
-                "lastOutcome": "Purchased Weekly Groceries",
-                "party": "Consumer",
-                "budgetBand": "High",
-                "emiInterest": False,
-                "closeProbability": 100,
-                "createdAt": datetime.utcnow().isoformat()
-            },
-            {
-                "id": 2,
-                "customerName": CUSTOMERS[1]["name"],
-                "customerPhone": CUSTOMERS[1]["phone"],
-                "status": "lost",
-                "lastOutcome": "Item Out of Stock",
-                "party": "Business (Caterer)",
-                "budgetBand": "Medium",
-                "emiInterest": False,
-                "closeProbability": 0,
-                "createdAt": datetime.utcnow().isoformat()
-            }
-        ]
+        "walkins": sorted(filtered, key=lambda x: str(x.get("createdAt", "")), reverse=True)
     }
+
+@app.post("/api/retail/agent/walkins")
+async def create_agent_walkin(request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    
+    cust_name = (body.get("customerName") or "").strip()
+    cust_phone = (body.get("customerPhone") or "").strip()
+    party = body.get("party") or "Solo"
+    sku_id = body.get("interestSkuId")
+    budget_band = body.get("budgetBand")
+    emi_interest = bool(body.get("emiInterest"))
+    
+    sku_name = None
+    if sku_id:
+        for p in PRODUCTS:
+            if str(p.get("id")) == str(sku_id):
+                sku_name = p.get("name")
+                break
+
+    new_id = max([w["id"] for w in WALKINS] + [0]) + 1
+    new_walkin = {
+        "id": new_id,
+        "customerName": cust_name or (f"Shopper {cust_phone[-4:]}" if cust_phone else "Walk-in Customer"),
+        "customerPhone": cust_phone or None,
+        "status": "open",
+        "lastOutcome": "In Store Discussion",
+        "party": party,
+        "budgetBand": budget_band,
+        "emiInterest": emi_interest,
+        "interestSkuId": sku_id,
+        "skuName": sku_name,
+        "revenue": 0,
+        "units": 0,
+        "closeProbability": 50,
+        "createdAt": datetime.utcnow().isoformat(),
+        "storeId": 1,
+        "agentId": 1
+    }
+    WALKINS.insert(0, new_walkin)
+    AGENT_DAILY["footfall"] += 1
+
+    # Insert or update customer in CUSTOMERS
+    if cust_phone or cust_name:
+        existing_cust = next((c for c in CUSTOMERS if (cust_phone and c.get("phone") == cust_phone) or (cust_name and c.get("name") == cust_name)), None)
+        if existing_cust:
+            if cust_name:
+                existing_cust["name"] = cust_name
+            if cust_phone:
+                existing_cust["phone"] = cust_phone
+            existing_cust["recencyDays"] = 0
+            existing_cust["lastPurchaseAt"] = datetime.utcnow().isoformat()
+        else:
+            new_cust_id = max([c["id"] for c in CUSTOMERS] + [0]) + 1
+            new_cust = {
+                "id": new_cust_id,
+                "name": cust_name or f"Shopper {cust_phone[-4:] if cust_phone else new_cust_id}",
+                "phone": cust_phone or f"98100{new_cust_id:05d}",
+                "email": f"{cust_phone or new_cust_id}@customer.grocerycrm.com",
+                "orders": 0,
+                "spend": 0,
+                "aov": 0,
+                "lastPurchase": datetime.utcnow().strftime("%Y-%m-%d"),
+                "recencyDays": 0,
+                "segment": "New Shopper",
+                "storeName": "Flagship Store Delhi",
+                "units": 0,
+                "saleCount": 0,
+                "demoCount": 0,
+                "lastPurchaseAt": datetime.utcnow().isoformat(),
+                "categoryPref": sku_name or "General Groceries"
+            }
+            CUSTOMERS.insert(0, new_cust)
+
+    # Sync with warehouse
+    if warehouse and warehouse.conn:
+        try:
+            today_key = int(datetime.utcnow().strftime("%Y%m%d"))
+            warehouse.conn.execute(
+                """INSERT INTO fact_walkin (date_key, store_id, customer_id, status, outcome, budget_band, created_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                (today_key, 1, new_id, "open", f"Walk-in ({party})", budget_band or "Medium", datetime.utcnow().isoformat())
+            )
+            warehouse.conn.commit()
+        except Exception as e:
+            print(f"Warehouse walkin sync error: {e}")
+
+    return {"success": True, "id": new_id, "walkin": new_walkin}
+
+@app.post("/api/retail/agent/demos")
+async def create_agent_demo(request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    AGENT_DAILY["demos"] += 1
+    walkin_id = body.get("walkinId")
+    if walkin_id:
+        walkin = next((w for w in WALKINS if str(w["id"]) == str(walkin_id)), None)
+        if walkin and walkin.get("customerPhone"):
+            cust = next((c for c in CUSTOMERS if c.get("phone") == walkin["customerPhone"]), None)
+            if cust:
+                cust["demoCount"] = cust.get("demoCount", 0) + 1
+    return {"success": True, "demos": AGENT_DAILY["demos"]}
+
+@app.post("/api/retail/agent/sales")
+async def create_agent_sale(request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    
+    sku_id = body.get("skuId")
+    units = int(body.get("units") or 1)
+    revenue_raw = body.get("revenue")
+    payment_method = (body.get("paymentMethod") or "UPI").upper()
+    walkin_id = body.get("walkinId")
+    cust_name = (body.get("customerName") or "").strip()
+    cust_phone = (body.get("customerPhone") or "").strip()
+
+    product = None
+    if sku_id:
+        for p in PRODUCTS:
+            if str(p.get("id")) == str(sku_id):
+                product = p
+                break
+    
+    if not product and PRODUCTS:
+        product = PRODUCTS[0]
+        sku_id = product["id"]
+
+    price = float(product.get("price", 250)) if product else 250.0
+    revenue = float(revenue_raw) if revenue_raw else round(price * units, 2)
+    
+    if product:
+        product["onHand"] = max(0, product.get("onHand", 100) - units)
+        product["stock"] = product["onHand"]
+
+    if walkin_id:
+        walkin = next((w for w in WALKINS if str(w["id"]) == str(walkin_id)), None)
+        if walkin:
+            walkin["status"] = "won"
+            walkin["revenue"] = revenue
+            walkin["units"] = units
+            walkin["lastOutcome"] = f"Purchased {product.get('name', 'Groceries') if product else 'Groceries'}"
+            walkin["closeProbability"] = 100
+            if not cust_phone:
+                cust_phone = walkin.get("customerPhone") or ""
+            if not cust_name:
+                cust_name = walkin.get("customerName") or ""
+
+    if cust_phone or cust_name:
+        cust = next((c for c in CUSTOMERS if (cust_phone and c.get("phone") == cust_phone) or (cust_name and c.get("name") == cust_name)), None)
+        if cust:
+            cust["orders"] = cust.get("orders", 0) + 1
+            cust["spend"] = cust.get("spend", 0) + int(revenue)
+            cust["aov"] = round(cust["spend"] / cust["orders"])
+            cust["units"] = cust.get("units", 0) + units
+            cust["saleCount"] = cust.get("saleCount", 0) + 1
+            cust["lastPurchase"] = datetime.utcnow().strftime("%Y-%m-%d")
+            cust["recencyDays"] = 0
+            cust["lastPurchaseAt"] = datetime.utcnow().isoformat()
+            if cust["spend"] > 25000:
+                cust["segment"] = "Champions"
+            elif cust["orders"] > 3:
+                cust["segment"] = "Loyal Shopper"
+            else:
+                cust["segment"] = "Regular Shopper"
+        else:
+            new_cust_id = max([c["id"] for c in CUSTOMERS] + [0]) + 1
+            new_cust = {
+                "id": new_cust_id,
+                "name": cust_name or f"Shopper {cust_phone[-4:] if cust_phone else new_cust_id}",
+                "phone": cust_phone or f"98100{new_cust_id:05d}",
+                "email": f"{cust_phone or new_cust_id}@customer.grocerycrm.com",
+                "orders": 1,
+                "spend": int(revenue),
+                "aov": int(revenue),
+                "lastPurchase": datetime.utcnow().strftime("%Y-%m-%d"),
+                "recencyDays": 0,
+                "segment": "New Shopper",
+                "storeName": "Flagship Store Delhi",
+                "units": units,
+                "saleCount": 1,
+                "demoCount": 0,
+                "lastPurchaseAt": datetime.utcnow().isoformat(),
+                "categoryPref": product.get("category", "General") if product else "General"
+            }
+            CUSTOMERS.insert(0, new_cust)
+
+    new_order_id = max([o["id"] for o in RETAIL_ORDERS] + [100]) + 1
+    new_order = {
+        "id": new_order_id,
+        "soldAt": datetime.utcnow().isoformat(),
+        "units": units,
+        "revenue": str(int(revenue)),
+        "paymentMethod": payment_method,
+        "orderStatus": "confirmed",
+        "customerName": cust_name or "Walk-in Customer",
+        "customerPhone": cust_phone or "—",
+        "productName": product.get("name", "Groceries") if product else "Groceries",
+        "agentName": "Cashier Rahul",
+        "skuId": sku_id
+    }
+    RETAIL_ORDERS.insert(0, new_order)
+
+    AGENT_DAILY["bills"] += 1
+    AGENT_DAILY["units"] += units
+    AGENT_DAILY["revenue"] += int(revenue)
+    AGENT_DAILY["won"] += 1
+
+    return {"success": True, "orderId": new_order_id, "revenue": revenue, "units": units}
+
+@app.post("/api/retail/agent/walkins/{id}/outcome")
+async def update_agent_walkin_outcome(id: int, request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    
+    outcome = body.get("outcome") or "lost"
+    note = body.get("note") or ("Sale won" if outcome == "won" else "Marked lost")
+    
+    walkin = next((w for w in WALKINS if w["id"] == id), None)
+    if walkin:
+        old_status = walkin.get("status")
+        walkin["status"] = outcome
+        walkin["lastOutcome"] = note
+        if outcome == "won" and old_status != "won":
+            AGENT_DAILY["won"] += 1
+            walkin["closeProbability"] = 100
+        elif outcome == "lost" and old_status != "lost":
+            AGENT_DAILY["lost"] += 1
+            walkin["closeProbability"] = 0
+
+    return {"success": True, "id": id, "status": outcome}
+
+@app.post("/api/retail/agent/footfall")
+async def update_agent_footfall(request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    count = int(body.get("count") or 1)
+    AGENT_DAILY["footfall"] += count
+    return {"success": True, "footfall": AGENT_DAILY["footfall"]}
 
 @app.get("/api/retail/agent/insights")
 def agent_insights():
@@ -551,28 +874,211 @@ def get_customers():
         "customers": CUSTOMERS
     }
 
+@app.get("/api/retail/lookup/customers")
+def lookup_customers_search(q: str = None):
+    if not q:
+        return {"customers": [
+            {
+                "id": c["id"],
+                "name": c.get("name"),
+                "phone": c.get("phone"),
+                "segment": c.get("segment"),
+                "totalSpend": c.get("spend", 0),
+                "visits": c.get("orders", 0) + c.get("demoCount", 0),
+                "lastPurchaseAt": c.get("lastPurchaseAt")
+            } for c in CUSTOMERS[:20]
+        ]}
+    q_lower = q.lower().strip()
+    hits = []
+    for c in CUSTOMERS:
+        name = (c.get("name") or "").lower()
+        phone = (c.get("phone") or "").lower()
+        if q_lower in name or q_lower in phone:
+            hits.append({
+                "id": c["id"],
+                "name": c.get("name"),
+                "phone": c.get("phone"),
+                "segment": c.get("segment"),
+                "totalSpend": c.get("spend", 0),
+                "visits": c.get("orders", 0) + c.get("demoCount", 0),
+                "lastPurchaseAt": c.get("lastPurchaseAt")
+            })
+    return {"customers": hits}
+
+@app.get("/api/retail/lookup/customers/{id}")
+def lookup_customer_detail(id: int):
+    cust = next((c for c in CUSTOMERS if c["id"] == id), None)
+    if not cust:
+        cust = CUSTOMERS[0] if CUSTOMERS else {"id": id, "name": f"Customer #{id}", "phone": None, "email": None}
+    
+    history = [
+        {
+            "id": o["id"],
+            "skuName": o.get("productName"),
+            "units": o.get("units", 1),
+            "revenue": o.get("revenue"),
+            "billNo": f"BILL-{o['id']:05d}",
+            "soldAt": o.get("soldAt")
+        } for o in RETAIL_ORDERS if o.get("customerPhone") == cust.get("phone")
+    ]
+    return {
+        "customer": {
+            "id": cust["id"],
+            "name": cust.get("name"),
+            "phone": cust.get("phone"),
+            "email": cust.get("email"),
+            "segment": cust.get("segment"),
+            "storeName": cust.get("storeName", "Flagship Store Delhi"),
+            "categoryPref": cust.get("categoryPref", "General"),
+            "createdAt": cust.get("lastPurchaseAt")
+        },
+        "history": history
+    }
+
+@app.get("/api/retail/customers/{id}")
+def get_customer_360(id: int):
+    cust = next((c for c in CUSTOMERS if c["id"] == id), None)
+    if not cust:
+        cust = CUSTOMERS[0] if CUSTOMERS else {"id": id, "name": f"Customer #{id}", "phone": None, "email": None, "orders": 0, "spend": 0, "aov": 0, "recencyDays": 0, "segment": "New"}
+    
+    orders_cnt = cust.get("orders", 0)
+    spend_val = cust.get("spend", 0)
+    aov_val = cust.get("aov", 0)
+    recency = cust.get("recencyDays", 0)
+    
+    history = [
+        {
+            "id": o["id"],
+            "skuId": o.get("skuId", 1),
+            "skuName": o.get("productName"),
+            "units": o.get("units", 1),
+            "revenue": o.get("revenue"),
+            "billNo": f"BILL-{o['id']:05d}",
+            "soldAt": o.get("soldAt")
+        } for o in RETAIL_ORDERS if o.get("customerPhone") == cust.get("phone")
+    ]
+    
+    points = max(50, spend_val // 10)
+    ledger = [
+        {"id": 1, "kind": "earned", "points": points, "note": "Reward on grocery purchases", "createdAt": cust.get("lastPurchaseAt")},
+    ]
+
+    return {
+        "customer": {
+            "id": cust["id"],
+            "name": cust.get("name"),
+            "phone": cust.get("phone"),
+            "email": cust.get("email"),
+            "storeName": cust.get("storeName", "Flagship Store Delhi"),
+            "categoryPref": cust.get("categoryPref", "Rice & Grains")
+        },
+        "metrics": {
+            "orders": orders_cnt,
+            "spend": spend_val,
+            "aov": aov_val,
+            "recencyDays": recency,
+            "lastPurchase": cust.get("lastPurchase"),
+            "segment": cust.get("segment", "Regular").lower().replace(" ", "_")
+        },
+        "loyalty": {
+            "balance": points,
+            "ledger": ledger
+        },
+        "history": history
+    }
+
+@app.post("/api/retail/customers/{id}/redeem")
+async def redeem_customer_points(id: int, request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    points = int(body.get("points") or 50)
+    return {"balance": max(0, 500 - points)}
+
+@app.get("/api/retail/manager/orders")
+def get_manager_orders(q: str = None, status: str = None, paymentMethod: str = None, agentId: str = None):
+    results = list(RETAIL_ORDERS)
+    if status:
+        results = [o for o in results if (o.get("orderStatus") or "").lower() == status.lower()]
+    if paymentMethod:
+        results = [o for o in results if (o.get("paymentMethod") or "").lower() == paymentMethod.lower()]
+    if q:
+        q_low = q.lower().strip()
+        results = [o for o in results if q_low in (o.get("customerName") or "").lower() or q_low in (o.get("customerPhone") or "").lower() or q_low in (o.get("productName") or "").lower()]
+    return {"orders": results}
+
+@app.post("/api/retail/manager/orders/{id}/status")
+async def update_single_order_status(id: int, request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    st = body.get("status", "confirmed")
+    for o in RETAIL_ORDERS:
+        if o["id"] == id:
+            o["orderStatus"] = st
+    return {"success": True}
+
+@app.post("/api/retail/manager/orders/status")
+async def bulk_update_order_status(request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    ids = body.get("ids", [])
+    st = body.get("status", "confirmed")
+    count = 0
+    for o in RETAIL_ORDERS:
+        if o["id"] in ids:
+            o["orderStatus"] = st
+            count += 1
+    return {"success": True, "count": count}
+
 @app.get("/api/retail/manager/board")
 def manager_board(date: str = None):
+    won_count = sum(1 for w in WALKINS if w.get("status") == "won")
+    lost_count = sum(1 for w in WALKINS if w.get("status") == "lost")
+    total_footfall = AGENT_DAILY["footfall"] + len(WALKINS) - 2
+    total_footfall = max(total_footfall, won_count + lost_count, 1)
+    total_bills = AGENT_DAILY["bills"] + sum(1 for w in WALKINS if w.get("status") == "won") - 1
+    total_units = AGENT_DAILY["units"] + sum(w.get("units", 0) for w in WALKINS if w.get("status") == "won") - 2
+    total_rev = AGENT_DAILY["revenue"] + sum(w.get("revenue", 0) for w in WALKINS if w.get("status") == "won") - 1450
+    conv = round((won_count / max(1, total_footfall)) * 100, 1) if total_footfall > 0 else 0.0
+
     return {
         "date": date or datetime.utcnow().strftime("%Y-%m-%d"),
         "role": "store_manager",
         "kpis": {
-            "demos": 0, "bills": 1500, "units": 8500, "revenue": 850000,
-            "footfall": 2500, "won": 1500, "lost": 50, "conversion": 60.0
+            "demos": AGENT_DAILY["demos"],
+            "bills": max(0, total_bills),
+            "units": max(0, total_units),
+            "revenue": max(0, total_rev),
+            "footfall": max(1, total_footfall),
+            "won": won_count,
+            "lost": lost_count,
+            "conversion": conv
         },
         "agents": [
-            {"agentId": 1, "name": "Cashier Rahul", "walkins": 800, "demos": 0, "bills": 600, "units": 3500, "revenue": 400000},
-            {"agentId": 2, "name": "Cashier Priya", "walkins": 700, "demos": 0, "bills": 500, "units": 3000, "revenue": 350000}
+            {"agentId": 1, "name": "Cashier Rahul", "walkins": len(WALKINS), "demos": AGENT_DAILY["demos"], "bills": max(0, total_bills), "units": max(0, total_units), "revenue": max(0, total_rev)},
+            {"agentId": 2, "name": "Cashier Priya", "walkins": 12, "demos": 5, "bills": 10, "units": 45, "revenue": 18500}
         ],
-        "targets": {"revenue": 1000000, "bills": 2000},
+        "targets": {"revenue": 200000, "bills": 120},
         "hourly": [
-            {"slot": "10-12", "today": 400, "yesterday": 350},
-            {"slot": "12-14", "today": 600, "yesterday": 550},
-            {"slot": "14-16", "today": 500, "yesterday": 600}
+            {"slot": "10-12", "today": 40, "yesterday": 35},
+            {"slot": "12-14", "today": 60, "yesterday": 55},
+            {"slot": "14-16", "today": 50, "yesterday": 60},
+            {"slot": "16-18", "today": 75, "yesterday": 68},
+            {"slot": "18-20", "today": 90, "yesterday": 82}
         ],
         "week": [
-            {"date": "2026-07-25", "footfall": 3000, "demos": 0, "bills": 1800, "revenue": 950000},
-            {"date": "2026-07-26", "footfall": 3500, "demos": 0, "bills": 2000, "revenue": 1100000}
+            {"date": "2026-07-27", "footfall": 215, "demos": 60, "bills": 54, "revenue": 90000},
+            {"date": "2026-07-28", "footfall": 218, "demos": 70, "bills": 66, "revenue": 120000},
+            {"date": "2026-07-29", "footfall": 222, "demos": 90, "bills": 77, "revenue": 180000},
+            {"date": "2026-07-30", "footfall": 230, "demos": 120, "bills": 80, "revenue": 250000},
+            {"date": "2026-07-31", "footfall": 325, "demos": 120, "bills": 98, "revenue": 450000},
+            {"date": "2026-08-01", "footfall": 420, "demos": 80, "bills": 105, "revenue": 150000},
+            {"date": "2026-08-02", "footfall": total_footfall, "demos": AGENT_DAILY["demos"], "bills": total_bills, "revenue": total_rev}
         ]
     }
 
@@ -602,18 +1108,31 @@ def manager_findings():
 def manager_eod():
     return {
         "date": datetime.utcnow().isoformat(),
-        "totals": {"footfall": 2500, "bills": 1500, "units": 8500, "revenue": 850000},
+        "totals": {
+            "footfall": AGENT_DAILY["footfall"],
+            "bills": AGENT_DAILY["bills"],
+            "units": AGENT_DAILY["units"],
+            "revenue": AGENT_DAILY["revenue"]
+        },
         "closed": False,
         "lockedAt": None
     }
 
 @app.get("/api/retail/manager/activity")
 def manager_activity():
+    activity = []
+    for w in WALKINS[:15]:
+        activity.append({
+            "id": w["id"],
+            "customerName": w.get("customerName", "Shopper"),
+            "customerPhone": w.get("customerPhone", "—"),
+            "status": w.get("status", "open"),
+            "skuName": w.get("skuName") or "General Groceries",
+            "lastOutcome": w.get("lastOutcome") or "In Store Walk-in",
+            "revenue": w.get("revenue", 0)
+        })
     return {
-        "activity": [
-            {"id": 1, "customerName": "John Doe", "customerPhone": "1234567890", "status": "won", "skuName": "Weekly Groceries", "lastOutcome": "Purchased", "revenue": 1500},
-            {"id": 2, "customerName": "Jane Doe", "customerPhone": "0987654321", "status": "lost", "skuName": "Organic Apples", "lastOutcome": "Out of Stock", "revenue": 0}
-        ]
+        "activity": activity
     }
 
 @app.get("/api/retail/manager/targets")
@@ -629,7 +1148,7 @@ def manager_targets():
 def campaigns():
     return {
         "campaigns": [
-            {"id": 1, "name": "Weekend Grocery Mega Sale", "channel": "whatsapp", "targetSegment": "all", "status": "sent", "recipientCount": 50000, "sentAt": datetime.utcnow().isoformat()}
+            {"id": 1, "name": "Weekend Grocery Mega Sale", "channel": "whatsapp", "targetSegment": "all", "status": "sent", "recipientCount": len(CUSTOMERS), "sentAt": datetime.utcnow().isoformat()}
         ]
     }
 
@@ -638,13 +1157,6 @@ def distributors():
     return {
         "total": 4,
         "distributors": SUPPLIERS
-    }
-
-@app.get("/api/retail/lookup/customers")
-@app.get("/api/retail/lookup/customers/{id}")
-def lookup_customers(id: int = None, q: str = None):
-    return {
-        "customers": CUSTOMERS[:10]
     }
 
 @app.get("/api/retail/lookup/stock")
@@ -719,3 +1231,415 @@ def patch_catchall(full_path: str):
 @app.delete("/api/retail/{full_path:path}")
 def delete_catchall(full_path: str):
     return {"success": True}
+
+
+# =========================================================================
+# AI DATA WAREHOUSE, PREDICTION & FORECASTING ENGINE
+# =========================================================================
+
+from fastapi import HTTPException
+from ai_engine import GroceryAIEngine
+from mlops.inference_engine import InferenceEngine
+from warehouse.warehouse_engine import DataWarehouse
+from warehouse.activity_logger import ActivityLogger
+from warehouse.feature_pipeline import FeaturePipeline
+
+# Initialise AI Data Warehouse on startup
+warehouse = DataWarehouse()
+warehouse.initialise()
+activity_logger = ActivityLogger(warehouse)
+feature_pipeline = FeaturePipeline(warehouse)
+
+ai_engine = GroceryAIEngine({
+    "products": PRODUCTS,
+    "customers": CUSTOMERS,
+    "orders": ORDERS
+})
+mlops_engine = InferenceEngine(warehouse=warehouse)
+
+def get_user_role_and_scope(request: Request):
+    auth_header = request.headers.get("authorization", "")
+    email = None
+    if auth_header.startswith("Bearer "):
+        token = auth_header.split(" ")[1]
+        try:
+            parts = token.split(".")
+            if len(parts) >= 2:
+                payload_b64 = parts[1] + "=" * ((4 - len(parts[1]) % 4) % 4)
+                payload_json = base64.urlsafe_b64decode(payload_b64).decode("utf-8")
+                payload = json.loads(payload_json)
+                email = payload.get("email")
+        except Exception:
+            pass
+
+    ROLE_BY_EMAIL = {
+        "admin@grocerycrm.com": {"role": "superadmin", "bypass": True, "readOnly": False},
+        "brand@grocerycrm.com": {"role": "brand", "bypass": False, "readOnly": False, "brandId": 1},
+        "distributor@grocerycrm.com": {"role": "distributor", "bypass": False, "readOnly": False, "warehouseId": 1},
+        "partner@grocerycrm.com": {"role": "partner", "bypass": False, "readOnly": False, "partnerId": 1},
+        "store.delhi@grocerycrm.com": {"role": "store_manager", "bypass": False, "readOnly": False, "storeId": 1},
+        "associate@grocerycrm.com": {"role": "store_associate", "bypass": False, "readOnly": False, "storeId": 1},
+    }
+
+    user_info = ROLE_BY_EMAIL.get(email, {"role": "superadmin", "bypass": True, "readOnly": False})
+    role = user_info.get("role", "superadmin")
+    return role, user_info
+
+
+def verify_ai_access(request: Request):
+    """
+    RBAC Guard: Ensures ONLY eligible roles have access to forecasting dashboards & MLOps administration.
+    Allowed Roles: superadmin, brand, distributor, partner, store_manager.
+    EXCLUDED: store_associate (returns 403 Forbidden).
+    """
+    role, user_info = get_user_role_and_scope(request)
+    if role == "store_associate":
+        raise HTTPException(
+            status_code=403,
+            detail="Access Denied: Store Associate role is not authorized to access AI Forecasting dashboards."
+        )
+    return role, user_info
+
+
+@app.get("/api/ai/overview")
+def get_ai_overview(request: Request, horizon: int = 30):
+    role, scope = verify_ai_access(request)
+    return ai_engine.get_overview(role=role, scope=scope, horizon=horizon)
+
+
+@app.get("/api/ai/sales")
+def get_ai_sales(request: Request, horizon: str = "month"):
+    role, scope = verify_ai_access(request)
+    return ai_engine.get_sales_forecast(horizon_type=horizon, role=role, scope=scope)
+
+
+@app.get("/api/ai/demand")
+def get_ai_demand(request: Request, category: str = None):
+    role, scope = verify_ai_access(request)
+    return ai_engine.get_demand_prediction(category_filter=category, role=role, scope=scope)
+
+
+@app.get("/api/ai/inventory")
+def get_ai_inventory(request: Request):
+    role, scope = verify_ai_access(request)
+    return ai_engine.get_inventory_forecast(role=role, scope=scope)
+
+
+@app.get("/api/ai/reorder")
+def get_ai_reorder(request: Request):
+    role, scope = verify_ai_access(request)
+    return ai_engine.get_reorder_recommendations(role=role, scope=scope)
+
+
+@app.post("/api/ai/reorder/create-po")
+async def create_auto_po(request: Request):
+    role, scope = verify_ai_access(request)
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+    return {
+        "success": True,
+        "poNumber": f"PO-AI-{random.randint(10000, 99999)}",
+        "createdAt": datetime.utcnow().isoformat() + "Z",
+        "status": "APPROVED_BY_AI",
+        "itemsCount": len(body.get("items", [1])),
+        "totalAmount": body.get("totalAmount", 125000),
+        "supplier": body.get("supplier", "North Foods LLC"),
+        "message": "AI Smart Purchase Order created and dispatched to supplier ERP."
+    }
+
+
+@app.get("/api/ai/expiry")
+def get_ai_expiry(request: Request):
+    role, scope = verify_ai_access(request)
+    return ai_engine.get_expiry_prediction(role=role, scope=scope)
+
+
+@app.get("/api/ai/customers")
+def get_ai_customers(request: Request):
+    role, scope = verify_ai_access(request)
+    return ai_engine.get_customer_intelligence(role=role, scope=scope)
+
+
+@app.get("/api/ai/promotions")
+def get_ai_promotions(request: Request, promoType: str = "20%", category: str = "All"):
+    role, scope = verify_ai_access(request)
+    return ai_engine.simulate_promotion(promo_type=promoType, target_category=category, role=role, scope=scope)
+
+
+@app.post("/api/ai/promotions/simulate")
+async def post_simulate_promo(request: Request):
+    role, scope = verify_ai_access(request)
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+    promo_type = body.get("promoType", "20%")
+    target_category = body.get("category", "All")
+    return ai_engine.simulate_promotion(promo_type=promo_type, target_category=target_category, role=role, scope=scope)
+
+
+@app.get("/api/ai/insights")
+def get_ai_insights(request: Request):
+    role, scope = verify_ai_access(request)
+    return ai_engine.get_ai_insights(role=role, scope=scope)
+
+
+@app.get("/api/ai/models")
+def get_ai_models(request: Request):
+    role, scope = verify_ai_access(request)
+    return ai_engine.get_model_performance()
+
+
+@app.get("/api/ai/settings")
+def get_ai_settings(request: Request):
+    role, scope = verify_ai_access(request)
+    return ai_engine.get_settings()
+
+
+@app.post("/api/ai/settings")
+async def update_ai_settings(request: Request):
+    role, scope = verify_ai_access(request)
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+    return ai_engine.update_settings(body)
+
+
+@app.post("/api/ai/retrain")
+def trigger_ai_retraining(request: Request):
+    role, scope = verify_ai_access(request)
+    return ai_engine.trigger_retrain()
+
+
+# =========================================================================
+# MLOPS SELF-LEARNING & TELEMETRY ENDPOINTS
+# =========================================================================
+
+@app.get("/api/ai/mlops/telemetry")
+def get_mlops_telemetry(request: Request):
+    role, scope = verify_ai_access(request)
+    return mlops_engine.get_telemetry()
+
+
+@app.get("/api/ai/mlops/models")
+def get_mlops_models(request: Request):
+    role, scope = verify_ai_access(request)
+    return mlops_engine.orchestrator.get_model_registry()
+
+
+@app.get("/api/ai/mlops/drift")
+def get_mlops_drift(request: Request):
+    role, scope = verify_ai_access(request)
+    return mlops_engine.orchestrator.compute_drift_metrics()
+
+
+@app.post("/api/ai/mlops/retrain")
+def trigger_mlops_retrain(request: Request):
+    role, scope = verify_ai_access(request)
+    return mlops_engine.trigger_self_learning_retrain()
+
+
+@app.post("/api/ai/mlops/simulate")
+async def simulate_mlops_scenario(request: Request):
+    role, scope = verify_ai_access(request)
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+    scenario_type = body.get("scenarioType", "price_elasticity")
+    params = body.get("params", {})
+    return mlops_engine.simulate_scenario(scenario_type, params)
+
+
+@app.get("/api/ai/mlops/anomalies")
+def get_mlops_anomalies(request: Request):
+    role, scope = verify_ai_access(request)
+    return mlops_engine.get_anomalies()
+
+
+@app.post("/api/ai/ask")
+async def post_ai_ask(request: Request):
+    role, scope = get_user_role_and_scope(request)
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+    question = body.get("question", "") or body.get("query", "") or body.get("prompt", "")
+    return mlops_engine.answer_query(question=question, role=role, scope=scope)
+
+
+@app.get("/api/ai/ask")
+def get_ai_ask(request: Request, q: str = ""):
+    role, scope = get_user_role_and_scope(request)
+    return mlops_engine.answer_query(question=q, role=role, scope=scope)
+
+
+# =========================================================================
+# UNIVERSAL CDC ACTIVITY LOGGING MIDDLEWARE
+# =========================================================================
+
+@app.middleware("http")
+async def cdc_activity_middleware(request: Request, call_next):
+    """
+    Universal CDC middleware that transparently captures all business mutations
+    (POST/PUT/PATCH/DELETE) and logs them into fact_audit_log in real-time.
+    """
+    response = await call_next(request)
+
+    method = request.method
+    path = request.url.path
+
+    # Only intercept state-mutating requests (exclude read queries & internal ask queries)
+    if method in ("POST", "PUT", "PATCH", "DELETE") and not path.startswith(("/api/ai/ask", "/api/ai/warehouse/log-event")):
+        try:
+            role, user_info = get_user_role_and_scope(request)
+            email = user_info.get("email") if isinstance(user_info, dict) else None
+            parts = path.strip("/").split("/")
+            entity = parts[1] if len(parts) > 1 else "general"
+
+            activity_logger.log(
+                action_type=method,
+                entity_type=entity,
+                entity_id=path,
+                user_role=role,
+                user_email=email,
+                endpoint=path,
+                http_method=method,
+                metadata={"status_code": response.status_code}
+            )
+        except Exception:
+            pass
+
+    return response
+
+
+# =========================================================================
+# AI DATA WAREHOUSE & ANALYTICS ENDPOINTS
+# =========================================================================
+
+@app.get("/api/ai/warehouse/status")
+def get_warehouse_status(request: Request):
+    """Returns real-time status of the Kimball Star Schema AI Data Warehouse."""
+    role, scope = verify_ai_access(request)
+    return warehouse.get_status()
+
+
+@app.get("/api/ai/warehouse/daily-snapshot")
+def get_warehouse_daily_snapshot(request: Request, limit: int = 30):
+    """Returns pre-aggregated daily sales and rolling features from the warehouse."""
+    role, scope = verify_ai_access(request)
+    return feature_pipeline.get_revenue_features(lookback_days=limit)
+
+
+@app.get("/api/ai/warehouse/feature-matrix")
+def get_warehouse_feature_matrix(request: Request, lookback: int = 90):
+    """Returns SQL-native ML feature vectors for model training and inference."""
+    role, scope = verify_ai_access(request)
+    return feature_pipeline.get_revenue_features(lookback_days=lookback)
+
+
+@app.get("/api/ai/warehouse/audit-log")
+def get_warehouse_audit_log(request: Request, limit: int = 50):
+    """Returns recent Change Data Capture (CDC) events from fact_audit_log."""
+    role, scope = verify_ai_access(request)
+    return {
+        "events": activity_logger.get_recent_events(limit=limit),
+        "byActionType": activity_logger.get_event_counts_by_type(),
+        "byEntityType": activity_logger.get_event_counts_by_entity(),
+        "dailyVolume": activity_logger.get_daily_event_volume(days=14),
+    }
+
+
+@app.get("/api/ai/warehouse/quality-report")
+def get_warehouse_quality_report(request: Request):
+    """Returns data quality validation, missing values, and referential integrity scores."""
+    role, scope = verify_ai_access(request)
+    return feature_pipeline.get_data_quality_report()
+
+
+@app.get("/api/ai/warehouse/categories")
+def get_warehouse_categories(request: Request):
+    """Returns category-level velocity, revenue, and gross margin from the warehouse."""
+    role, scope = verify_ai_access(request)
+    return feature_pipeline.get_category_demand_features()
+
+
+@app.get("/api/ai/warehouse/suppliers")
+def get_warehouse_suppliers(request: Request):
+    """Returns supplier reliability, fill rates, and lead time metrics from the warehouse."""
+    role, scope = verify_ai_access(request)
+    return feature_pipeline.get_supplier_performance()
+
+
+@app.get("/api/ai/warehouse/inventory-health")
+def get_warehouse_inventory_health(request: Request):
+    """Returns SKU-level days of cover, stockout hazard probability, and reorder points."""
+    role, scope = verify_ai_access(request)
+    return feature_pipeline.get_inventory_health()
+
+
+@app.get("/api/ai/warehouse/anomalies")
+def get_warehouse_anomalies(request: Request):
+    """Returns statistical z-score anomaly candidates across warehouse time series."""
+    role, scope = verify_ai_access(request)
+    return feature_pipeline.get_anomaly_candidates()
+
+
+@app.post("/api/ai/warehouse/etl/run")
+def trigger_warehouse_etl(request: Request):
+    """Triggers an incremental ETL run to synchronize operational data into warehouse facts."""
+    role, scope = verify_ai_access(request)
+    status = warehouse.run_etl()
+    return {
+        "success": True,
+        "message": "ETL sync completed successfully.",
+        "warehouseStatus": status,
+    }
+
+
+@app.post("/api/ai/warehouse/log-event")
+async def post_warehouse_log_event(request: Request):
+    """Direct CDC event ingestion endpoint for client-side business activity tracking."""
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+
+    role, user_info = get_user_role_and_scope(request)
+    email = user_info.get("email") if isinstance(user_info, dict) else None
+
+    log_id = activity_logger.log(
+        action_type=body.get("actionType", "CUSTOM_EVENT"),
+        entity_type=body.get("entityType", "client_event"),
+        entity_id=str(body.get("entityId", "")),
+        user_role=role,
+        user_email=email,
+        session_id=body.get("sessionId"),
+        store_id=body.get("storeId", 1),
+        device_info=body.get("deviceInfo"),
+        before=body.get("before"),
+        after=body.get("after"),
+        qty_before=body.get("qtyBefore"),
+        qty_after=body.get("qtyAfter"),
+        price_before=body.get("priceBefore"),
+        price_after=body.get("priceAfter"),
+        inv_before=body.get("invBefore"),
+        inv_after=body.get("invAfter"),
+        metadata=body.get("metadata"),
+    )
+
+    return {"success": True, "auditId": log_id, "timestamp": datetime.utcnow().isoformat() + "Z"}
+
+
+
+
+

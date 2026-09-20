@@ -19,6 +19,11 @@ export async function logSaleForAgent(_prev: ActionResult | null, formData: Form
       customerPhone: formData.get("customerPhone") || undefined,
     });
     revalidatePath("/retail/orders");
+    revalidatePath("/retail/customers");
+    revalidatePath("/retail/agent/customers");
+    revalidatePath("/retail/manager");
+    revalidatePath("/retail/agent");
+    revalidatePath("/retail/analytics");
     return { ok: true, message: "Sale logged" };
   } catch (e) {
     return { ok: false, error: e instanceof Error && e.message ? e.message : "Could not log the sale" };

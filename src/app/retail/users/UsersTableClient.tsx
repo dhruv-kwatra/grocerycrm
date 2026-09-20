@@ -46,9 +46,9 @@ export function UsersTableClient({ users }: { users: RetailUser[] }) {
               className="w-full pl-8 pr-2 py-1 text-xs border border-[var(--border-strong)] rounded-lg bg-[var(--surface)] outline-none focus:border-[var(--accent)]"
             />
           </div>
-          {roles.map((r) => (
+          {roles.map((r, rIdx) => (
             <button
-              key={r}
+              key={`${r}-${rIdx}`}
               type="button"
               onClick={() => setRoleFilter(roleFilter === r ? "" : r)}
               className={`text-[11px] px-2.5 py-1 rounded-full font-medium transition-colors ${
@@ -80,10 +80,11 @@ export function UsersTableClient({ users }: { users: RetailUser[] }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border)]">
-              {filtered.map((u) => {
+              {filtered.map((u, idx) => {
                 const active = u.accountActive && u.bindingActive;
+                const rowKey = `${u.userId ?? "usr"}-${u.nodeId ?? "node"}-${u.role ?? "role"}-${idx}`;
                 return (
-                  <tr key={u.userId}>
+                  <tr key={rowKey}>
                     <td className="px-3 py-2.5 text-[var(--text)] font-medium">{u.name}</td>
                     <td className="px-3 py-2.5 text-[var(--muted)]">{u.email}</td>
                     <td className="px-3 py-2.5">

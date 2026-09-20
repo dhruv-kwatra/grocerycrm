@@ -5,10 +5,11 @@ import { mintEdgeToken } from "@/lib/auth/edge-token";
 
 const { auth } = NextAuth(authConfig);
 
-// Retail-only app: the ONLY backend prefix this frontend proxies is /api/retail
+// Retail-only app + AI Intelligence: the backend prefixes this frontend proxies are /api/retail and /api/ai
 // (see next.config.ts rewrites). Client-direct calls to it get a minted Bearer;
 // server-side apiGet/apiSend hit the backend directly with their own token.
 const isRetailApi = (p: string) => p === "/api/retail" || p.startsWith("/api/retail/");
+const isAiApi = (p: string) => p === "/api/ai" || p.startsWith("/api/ai/");
 
 export default auth(async (req) => {
   const { nextUrl } = req;
@@ -22,9 +23,9 @@ export default auth(async (req) => {
     return NextResponse.next();
   }
 
-  // Retail API: authenticate by minting + injecting a Bearer. 401 (not a login
+  // Retail & AI API: authenticate by minting + injecting a Bearer. 401 (not a login
   // redirect) for unauthenticated API calls.
-  if (isRetailApi(pathname)) {
+  if (isRetailApi(pathname) || isAiApi(pathname)) {
     if (!user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const headers = new Headers(req.headers);
     const token = await mintEdgeToken(user);
