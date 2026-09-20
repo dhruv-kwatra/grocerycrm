@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": ".datetime-check/nav",
+    // Pinned so the emitted path doesn't move with rootDir inference.
+    "rootDir": "src",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "target": "es2022",
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "plugins": []
+  },
+  "include": ["src/app/retail/_components/retail-nav.check.ts"]
+}

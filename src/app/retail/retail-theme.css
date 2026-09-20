@@ -1,0 +1,258 @@
+/* RetailIQ theme — Grocery brand, dark.
+ *
+ * Values are lifted from the dark sections of the Grocery pitch deck
+ * (docs/retailcrm/grocery-pitch.html): black ground (#141518 / #1D1E23 cards),
+ * warm paper-white ink, signature Grocery red (#16A34A) as the accent —
+ * white + red on black. Status colors are the pitch's good/warn/crit,
+ * brightened a step so they read on the dark ground.
+ *
+ * Only the token *values* changed — every token name is identical, so all
+ * retail pages repaint with no markup changes. --accent-dark doubles as the
+ * red-chip text (on --accent-light tints) and the accent-button hover, so on
+ * dark it is a *brighter* red: hover brightens, chip text stays readable.
+ *
+ * color-scheme:dark keeps native form controls/scrollbars dark. Standard
+ * properties/selectors only (no ::-webkit-scrollbar), so a plain CSS import
+ * is safe through the Tailwind v4 / Lightning CSS pipeline. */
+.retail-theme {
+  color-scheme: dark;
+  /* Base ink for the subtree. Without this, anything that doesn't set its own
+   * text-* class inherits body's --foreground (#171717) — a near-black defined
+   * in globals.css for the portal's light ground, which on this dark slate is
+   * invisible. Most retail markup sets --text explicitly and so looked fine;
+   * the few spots that didn't (the distributor's dispatch totals row) went
+   * dark-on-dark. Setting it once here is the fix for all of them, and it
+   * follows the theme, so the light toggle stays correct too. */
+  color: var(--text);
+  /* "Glass" redesign — slate-blue ground, Grocery red accent, white-alpha
+   * hairlines. Only token *values* changed; every name is identical, so all
+   * retail pages repaint with no markup changes. */
+  --bg: #0B0F17;             /* deep slate ground */
+  --surface: #0F172A;        /* slate-900 cards */
+  --surface-raised: #1B2436; /* one step up */
+  --glass: rgba(15,23,42,0.72); /* translucent card/chrome fill for blur */
+  --border: rgba(255,255,255,0.08);  /* white hairline — the glass edge */
+  --border-strong: rgba(255,255,255,0.14);
+  --text: #F8FAFC;           /* near-white ink */
+  --muted: #94A3B8;          /* slate-400 */
+  --faint: #64748B;          /* slate-500 */
+  --accent: #10B981;         /* Grocery red */
+  --accent-light: rgba(16,185,129,0.13); /* red tint fill */
+  --accent-dark: #34D399;    /* brighter red: chip text + button hover */
+  --secondary: #60A5FA;      /* sky-400 */
+  --secondary-light: rgba(96,165,250,0.13);
+  --secondary-dark: #93C5FD;
+  --success: #34D399;
+  --success-bg: rgba(52,211,153,0.13);
+  --warning: #FBBF24;
+  --warning-bg: rgba(251,191,36,0.13);
+  --error: #34D399;
+  --error-bg: rgba(52,211,153,0.13);
+  --info: #60A5FA;
+  --info-bg: rgba(96,165,250,0.13);
+
+  /* Categorical chart slots — fixed order, assigned by entity, never cycled. */
+  --chart-1: #60A5FA;
+  --chart-2: #34D399;
+  --chart-3: #34D399;
+  --chart-4: #FBBF24;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.45), 0 18px 50px -18px rgba(0,0,0,0.75);
+  --shadow-modal: 0 4px 6px -1px rgba(0,0,0,0.5), 0 30px 70px -14px rgba(0,0,0,0.85);
+
+  /* Prototype signatures, lifted from newui/src/pages/RetailPortal.jsx: the
+   * red-to-crimson pill gradient (135deg), its outer glow + inner top hairline,
+   * and the 20px card radius it leans on 43 times. Named tokens so the chrome
+   * and any page can reach them without re-typing the literals. */
+  --accent-grad: linear-gradient(135deg, #10B981 0%, #15803D 100%);
+  --accent-glow: 0 4px 20px rgba(16,185,129,0.45), inset 0 1px 0 rgba(255,255,255,0.25);
+  --radius-card: 20px;
+  --blur-glass: 20px;
+
+  /* Ambient radial backlight — matches the prototype's body gradient
+   * (index.css): red bloom overhead, cool blue off the right shoulder.
+   * background-image only, so Tailwind's bg-[var(--bg)] color still applies. */
+  background-image:
+    radial-gradient(circle at 50% -10%, rgba(16,185,129,0.08), transparent 60%),
+    radial-gradient(circle at 90% 40%, rgba(30,58,138,0.06), transparent 50%);
+  background-attachment: fixed;
+}
+
+/* Light theme — opt-in via data-theme="light" on the .retail-theme element
+ * (toggled by ThemeToggle, persisted in localStorage). Same token names, so
+ * every screen repaints with no markup changes. Grocery red stays the accent. */
+.retail-theme[data-theme="light"] {
+  color-scheme: light;
+  background-image: none;
+  --bg: #F5F6F8;
+  --surface: #FFFFFF;
+  --surface-raised: #F1F2F4;
+  --glass: rgba(255,255,255,0.72);
+  --border: #E5E7EB;
+  --border-strong: #CFD2D8;
+  --text: #191A1E;
+  --muted: #5C5E66;
+  --faint: #9498A1;
+  --accent: #16A34A;
+  --accent-light: #ECFDF5;
+  --accent-dark: #166534;
+  --secondary: #2158C9;
+  --secondary-light: #E7EEFB;
+  --secondary-dark: #17408F;
+  --success: #1B9E77;
+  --success-bg: #E5F5EF;
+
+  /* Categorical chart slots for the light surface — same six checks. */
+  --chart-1: #2158C9;
+  --chart-2: #16A34A;
+  --chart-3: #1B9E77;
+  --chart-4: #B7791F;
+  --warning: #B5790B;
+  --warning-bg: #FBF0DC;
+  --error: #047857;
+  --error-bg: #D1FAE5;
+  --info: #2158C9;
+  --info-bg: #E7EEFB;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 12px 40px -12px rgba(0,0,0,0.10);
+  --shadow-modal: 0 4px 6px -1px rgba(0,0,0,0.10), 0 24px 60px -12px rgba(0,0,0,0.18);
+
+  /* Same signatures on the light ground: the deeper brand red, and a glow
+   * pulled well back — 0.45 alpha over white reads as a smear, not a light. */
+  --accent-grad: linear-gradient(135deg, #16A34A 0%, #166534 100%);
+  --accent-glow: 0 4px 14px rgba(22,163,74,0.28), inset 0 1px 0 rgba(255,255,255,0.30);
+}
+
+/* ── Prototype card shell ────────────────────────────────────────────────────
+ * The newui prototype draws every panel the same way: a blurred glass fill, a
+ * white hairline, a 20px radius, and on hover a small lift with the Grocery red
+ * picking out the border plus a red glow. That shell was repeated inline ~35
+ * times across the retail pages as
+ *   bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-…
+ * so it lives here once instead. Pages say `rlp-card`; padding and layout stay
+ * on the element as utilities, since those vary per panel.
+ *
+ * Hover is opt-out via `rlp-card--flat` for panels that aren't clickable — a
+ * lift that leads nowhere is a lie, and it also stops table rows from wobbling. */
+.retail-theme .rlp-card {
+  background: var(--glass);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.retail-theme .rlp-card:not(.rlp-card--flat):hover {
+  transform: translateY(-4px);
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: var(--shadow-card), 0 18px 40px -12px rgba(16, 185, 129, 0.28);
+}
+.retail-theme[data-theme="light"] .rlp-card:not(.rlp-card--flat):hover {
+  border-color: rgba(22, 163, 74, 0.35);
+  box-shadow: var(--shadow-card), 0 14px 32px -12px rgba(22, 163, 74, 0.20);
+}
+/* A hover lift that fires on every scroll-past is motion sickness for someone
+ * who asked us not to animate. */
+@media (prefers-reduced-motion: reduce) {
+  .retail-theme .rlp-card { transition: border-color 0.25s ease; }
+  .retail-theme .rlp-card:not(.rlp-card--flat):hover { transform: none; }
+}
+
+/* The prototype's KPI tile: uppercase tracked label, oversized tight number,
+ * signed delta underneath. Type only — the shell above does the rest. */
+.retail-theme .rlp-stat-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.retail-theme .rlp-stat-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.retail-theme .rlp-stat-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.retail-theme input,
+.retail-theme select,
+.retail-theme textarea {
+  background-color: var(--surface);
+  color: var(--text);
+}
+.retail-theme select option { background-color: var(--surface); color: var(--text); }
+.retail-theme ::placeholder { color: var(--faint); opacity: 1; }
+
+/* KPI sparkline draw-in: the line reveals via stroke-dashoffset (pathLength=1
+ * on the polyline), the fill fades in. Respects reduced motion. */
+@keyframes rlp-spark-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes rlp-spark-fade { from { opacity: 0; } to { opacity: 1; } }
+.spark-line { stroke-dasharray: 1; animation: rlp-spark-draw 0.9s ease-out both; }
+.spark-area { animation: rlp-spark-fade 0.9s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .spark-line { animation: none; stroke-dashoffset: 0; }
+  .spark-area { animation: none; opacity: 1; }
+}
+
+/* Account card — the header avatar's popup, centred on a blurred scrim. A
+ * <dialog> so Esc, the focus trap and the backdrop come from the browser
+ * rather than being re-implemented (and forgotten) here. */
+.profile-card {
+  margin: auto;
+  width: min(420px, calc(100vw - 2rem));
+  max-width: 100vw;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 24px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-modal);
+  overflow: visible;
+}
+.profile-card::backdrop {
+  background: rgb(0 0 0 / 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+/* Entry only — a dialog that animates out needs allow-discrete on display,
+ * and getting that wrong leaves a ghost card on screen after close. */
+@keyframes rlp-card-in { from { opacity: 0; transform: translateY(16px) scale(0.96); } }
+.profile-card[open] { animation: rlp-card-in 0.22s cubic-bezier(0.22, 1, 0.36, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .profile-card[open] { animation: none; }
+}
+
+/* Walk-in drawer — a right-hand slide-over built on <dialog>, so the backdrop,
+ * Esc-to-close and the focus trap are the browser's job, not ours. Width is the
+ * form's natural width (the /retail/agent/walkin page uses max-w-md), never the
+ * full screen. Desktop/tablet only; the phone still routes to the page. */
+.walkin-drawer {
+  margin: 0 0 0 auto;                 /* pinned right, full height */
+  height: 100dvh;
+  max-height: 100dvh;
+  width: min(28rem, 100vw);
+  max-width: 100vw;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateX(100%);
+  transition: transform 0.22s ease-out, overlay 0.22s allow-discrete, display 0.22s allow-discrete;
+}
+.walkin-drawer[open] { display: flex; transform: translateX(0); }
+@starting-style { .walkin-drawer[open] { transform: translateX(100%); } }
+.walkin-drawer::backdrop { background: rgb(0 0 0 / 0.35); }
+@media (prefers-reduced-motion: reduce) {
+  .walkin-drawer { transition: none; }
+}

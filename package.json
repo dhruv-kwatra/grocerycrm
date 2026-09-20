@@ -1,0 +1,43 @@
+{
+  "name": "retailcrm",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 4001",
+    "backend": "uvicorn main:app --app-dir backend --port 4400 --reload",
+    "build": "next build",
+    "start": "next start -p 4001",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "check:datetime": "tsc src/lib/retail/datetime.check.ts --outDir .datetime-check --target es2022 --skipLibCheck --esModuleInterop && TZ=UTC node .datetime-check/datetime.check.js",
+    "check:nav": "tsc -p tsconfig.check.json && node .datetime-check/nav/app/retail/_components/retail-nav.check.js"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.40.0",
+    "gsap": "^3.13.0",
+    "lucide-react": "^1.16.0",
+    "next": "16.2.11",
+    "next-auth": "5.0.0-beta.32",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-hot-toast": "^2.5.2",
+    "recharts": "^3.8.1",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.11",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "^8.5.10",
+    "sharp": "^0.35.0"
+  }
+}

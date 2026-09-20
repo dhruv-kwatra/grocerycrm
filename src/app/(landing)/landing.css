@@ -1,0 +1,191 @@
+/* RetailIQ landing — pitch-deck theme (docs/retailcrm/grocery-pitch.html).
+ * Layout/typography live as Tailwind utilities in the components; this file
+ * keeps ONLY what utilities can't express cleanly:
+ *   - the .rlp token scope + base element styles
+ *   - pseudo-elements (hero ambiance, hero-shot glow/fade, step counter,
+ *     mobile device notch)
+ *   - keyframes + the marquee seam math
+ *   - frame-context overrides (.device.tablet/.mobile descendants)
+ *   - table last-child rules (comp/acc/lb)
+ * All selectors scoped under .rlp so nothing leaks into the portal shells. */
+.rlp {
+  --ground: #14151B;
+  --ground-2: #1D1E23;
+  --paper: #F7F6F4;
+  --card: #FFFFFF;
+  --ink: #1C1D21;
+  --ink-2: #61636B;
+  --ink-3: #9A9CA3;
+  --paper-ink: #ECEBE8;
+  --paper-ink-2: #A9A9AE;
+  --red: #16A34A;
+  --red-deep: #C2170F;
+  --good: #0E8A6D;
+  --warn: #B26A00;
+  --crit: #C2170F;
+  --line: #E4E2DD;
+  --line-dark: #2C2D33;
+  --radius: 10px;
+  /* Pin the globals.css tokens the shared .skeleton shimmer reads, so it
+   * matches the landing's light cards even when the OS is in dark mode. */
+  --surface-raised: #EFEDE9;
+  --border: var(--line);
+  /* Portal typography (Roboto via next/font, var set on <html> in the root layout). */
+  --font: var(--font-dm-sans), system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  font-family: var(--font);
+  background: var(--ground);
+  color: var(--paper-ink);
+  line-height: 1.55;
+  font-size: 16px;
+  min-height: 100vh;
+}
+.rlp h1, .rlp h2, .rlp h3, .rlp h4 { line-height: 1.15; text-wrap: balance; }
+.rlp .num { font-variant-numeric: tabular-nums; }
+
+/* ---------- hero ambiance (pseudo-elements) ---------- */
+.rlp header.hero { position: relative; overflow: hidden; }
+/* Static CSS only — no animated gradients: faint grid + soft red radial glow,
+ * both fading toward the fold. */
+.rlp header.hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--line-dark) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
+  background-size: 72px 72px;
+  opacity: .22;
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 75%);
+}
+.rlp header.hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(720px 360px at 72% 12%, rgba(22, 163, 74, .13), transparent 70%);
+}
+
+/* Product shot: tilted device, red glow behind, cropped with a fade into
+ * the ground so it reads as a "peek" of the app. */
+.rlp .hero-shot { position: relative; margin-top: 56px; max-height: 400px; overflow: hidden; }
+.rlp .hero-shot::before {
+  content: ""; position: absolute; inset: -30px -60px auto; height: 320px; pointer-events: none;
+  background: radial-gradient(60% 70% at 50% 30%, rgba(22, 163, 74, .16), transparent 70%);
+}
+.rlp .hero-shot .device { position: relative; z-index: 1; transform: perspective(1400px) rotateX(7deg); transform-origin: top center; }
+.rlp .hero-shot::after {
+  content: ""; position: absolute; inset: auto 0 0; height: 140px; z-index: 2; pointer-events: none;
+  background: linear-gradient(transparent, var(--ground));
+}
+@media (max-width: 640px) {
+  .rlp .hero-shot { max-height: 300px; }
+  .rlp .hero-shot .device { transform: none; }
+}
+
+/* ---------- dark tables (research + access matrix) ---------- */
+.rlp table.comp { width: 100%; border-collapse: collapse; font-size: .86rem; min-width: 640px; }
+.rlp table.comp th { text-align: left; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--paper-ink-2); padding: 12px 16px; border-bottom: 1px solid var(--line-dark); background: var(--ground-2); }
+.rlp table.comp td { padding: 12px 16px; border-bottom: 1px solid var(--line-dark); vertical-align: top; color: var(--paper-ink); }
+.rlp table.comp tr:last-child td { border-bottom: none; }
+.rlp table.comp td.gap { color: var(--paper-ink-2); }
+.rlp table.comp .us td { background: rgba(22, 163, 74, .07); }
+.rlp table.comp .us td:first-child { color: #fff; font-weight: 700; }
+
+.rlp table.acc { width: 100%; border-collapse: collapse; font-size: .84rem; min-width: 680px; }
+.rlp table.acc th { text-align: left; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--paper-ink-2); padding: 12px 16px; border-bottom: 1px solid var(--line-dark); background: var(--ground-2); }
+.rlp table.acc td { padding: 12px 16px; border-bottom: 1px solid var(--line-dark); color: var(--paper-ink); vertical-align: top; }
+.rlp table.acc tr:last-child td { border-bottom: none; }
+.rlp table.acc td:first-child { font-weight: 700; color: #fff; white-space: nowrap; }
+.rlp table.acc .no { color: var(--paper-ink-2); font-size: .8rem; }
+
+/* ---------- integration marquee (loop mechanics) ---------- */
+.rlp .marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.rlp .marquee-track { display: flex; gap: 28px; width: max-content; animation: rlp-marquee 30s linear infinite; }
+.rlp .marquee:hover .marquee-track { animation-play-state: paused; }
+/* each item carries its trailing dot at the same 28px rhythm as the track gap,
+ * so the two copies tile seamlessly */
+.rlp .int-item { display: inline-flex; align-items: center; gap: 28px; font-size: 1.2rem; font-weight: 700; color: #8A8B92; white-space: nowrap; }
+.rlp .int-item:hover { color: var(--paper-ink); }
+.rlp .int-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); opacity: .8; }
+/* two copies + uniform gaps: one copy's span is 50% of track + half a gap */
+@keyframes rlp-marquee { to { transform: translateX(calc(-50% - 14px)); } }
+
+/* ---------- product demo frame (context-driven styles) ---------- */
+.rlp .device { margin: 0 auto; transition: max-width .35s ease; max-width: 1080px; }
+.rlp .device.tablet { max-width: 760px; }
+.rlp .device.mobile { max-width: 392px; }
+.rlp .device-chrome { background: var(--ground-2); border: 1px solid var(--line-dark); border-bottom: none; border-radius: 14px 14px 0 0; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
+.rlp .device-chrome .dot { width: 9px; height: 9px; border-radius: 50%; background: #3A3B42; }
+.rlp .device-chrome .url { flex: 1; background: var(--ground); border: 1px solid var(--line-dark); border-radius: 6px; font-size: .72rem; color: var(--paper-ink-2); padding: 4px 12px; text-align: center; font-family: var(--font-geist-mono), ui-monospace, monospace; }
+.rlp .device.mobile .device-chrome { border-radius: 22px 22px 0 0; justify-content: center; }
+.rlp .device.mobile .device-chrome .dot, .rlp .device.mobile .device-chrome .url { display: none; }
+.rlp .device.mobile .device-chrome::after { content: ""; width: 80px; height: 6px; border-radius: 99px; background: #3A3B42; }
+.rlp .screen { background: var(--paper); border: 1px solid var(--line); border-top: none; border-radius: 0 0 14px 14px; padding: 20px; min-height: 430px; }
+.rlp .device.mobile .screen { border-radius: 0 0 22px 22px; padding: 14px; }
+
+.rlp .app-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 16px; }
+.rlp .app-top .who-am-i { font-size: .78rem; color: var(--ink-2); }
+.rlp .app-top .who-am-i b { color: var(--ink); }
+.rlp .role-badge { font-size: .66rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; background: var(--ink); color: #fff; white-space: nowrap; }
+.rlp .role-badge.fmcgBrand { background: var(--red-deep); }
+
+.rlp .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+.rlp .device.tablet .kpis, .rlp .device.mobile .kpis { grid-template-columns: repeat(2, 1fr); }
+.rlp .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.rlp .kpi .v { font-size: 1.3rem; font-weight: 800; letter-spacing: -.02em; }
+.rlp .kpi .k { font-size: .7rem; color: var(--ink-2); margin-top: 1px; }
+.rlp .kpi .d { font-size: .68rem; font-weight: 700; margin-top: 4px; }
+.rlp .d.up { color: var(--good); } .rlp .d.down { color: var(--crit); } .rlp .d.flat { color: var(--ink-3); } .rlp .d.warn { color: var(--warn); }
+
+.rlp .panel-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 10px; }
+.rlp .device.tablet .panel-grid, .rlp .device.mobile .panel-grid { grid-template-columns: 1fr; }
+.rlp .panel { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; min-width: 0; }
+.rlp .panel h4 { font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 10px; }
+.rlp .rows { display: flex; flex-direction: column; }
+.rlp .row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: .83rem; }
+.rlp .row:first-of-type { border-top: none; }
+.rlp .row .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rlp .row .sub { font-size: .72rem; color: var(--ink-3); }
+.rlp .pill { font-size: .68rem; font-weight: 700; padding: 2px 9px; border-radius: 99px; white-space: nowrap; }
+.rlp .pill.good { background: rgba(14, 138, 109, .1); color: var(--good); }
+.rlp .pill.warn { background: rgba(178, 106, 0, .12); color: var(--warn); }
+.rlp .pill.crit { background: rgba(194, 23, 15, .09); color: var(--crit); }
+.rlp .pill.info { background: rgba(33, 88, 201, .09); color: #2158C9; }
+.rlp .minibar { flex: 0 0 90px; height: 6px; border-radius: 99px; background: #EFEDE9; overflow: hidden; }
+.rlp .minibar i { display: block; height: 100%; border-radius: 99px; background: #2158C9; }
+.rlp .scope-line { font-size: .82rem; color: var(--ink-2); background: var(--card); border: 1px dashed var(--line); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; }
+.rlp .scope-line b { color: var(--red-deep); }
+
+/* ---------- analytics leaderboard table ---------- */
+.rlp table.lb { width: 100%; border-collapse: collapse; font-size: .84rem; min-width: 560px; }
+.rlp table.lb th { text-align: left; font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.rlp table.lb td { padding: 9px 10px; border-bottom: 1px solid var(--line); }
+.rlp table.lb tr:last-child td { border-bottom: none; }
+.rlp table.lb .r { text-align: right; }
+
+/* ---------- rollout steps (CSS counter) ---------- */
+.rlp .rollout { counter-reset: step; }
+.rlp .step { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; counter-increment: step; }
+.rlp .step::before { content: counter(step, decimal-leading-zero); font-size: .8rem; font-weight: 800; color: var(--red-deep); letter-spacing: .06em; }
+@media (hover: hover) {
+  /* transform transition only in the hover state — never fights GSAP's
+   * reveal tween on the same cards (hover-out snaps, invisible at 3px) */
+  .rlp .step { transition: border-color .25s ease; }
+  .rlp .step:hover {
+    transform: translateY(-3px); border-color: rgba(194, 23, 15, .35);
+    transition: transform .25s ease, border-color .25s ease;
+  }
+}
+
+/* ---------- page-level responsive for the mock internals ---------- */
+@media (max-width: 820px) {
+  .rlp .kpis { grid-template-columns: repeat(2, 1fr); }
+  .rlp .panel-grid { grid-template-columns: 1fr; }
+}
+
+/* Smooth anchor jumps (document-level, so scoped via :has; off under reduced motion). */
+html:has(.rlp) { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html:has(.rlp) { scroll-behavior: auto; } }
+
+/* Static fallback — JS animations also check useReducedMotion(); this kills
+ * any CSS transition/animation the same way the source file does. */
+@media (prefers-reduced-motion: reduce) {
+  .rlp *, .rlp *::before, .rlp *::after { transition: none !important; animation: none !important; }
+}

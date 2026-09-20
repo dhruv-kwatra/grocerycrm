@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+:root {
+  /* Portal-level */
+  --background: #ffffff;
+  --foreground: #171717;
+
+  /* HRMS design tokens */
+  --bg:            #FAFAF8;
+  --surface:       #FFFFFF;
+  --surface-raised:#F2F2EE;
+  --border:        #E4E4E1;
+  --border-strong: #CECECA;
+
+  --shadow-card:  0 1px 2px rgba(0,0,0,0.04), 0 12px 40px -12px rgba(0,0,0,0.08);
+  --shadow-modal: 0 4px 6px -1px rgba(0,0,0,0.1), 0 24px 60px -12px rgba(0,0,0,0.15);
+
+  --text:    #111110;
+  --muted:   #767672;
+  --faint:   #A8A8A3;
+
+  /* Primary — deep ocean blue */
+  --accent:       #115BA6;
+  --accent-light: #E7F0FA;
+  --accent-dark:  #0D4880;
+
+  /* Secondary — luminous cyan, analogous to the primary */
+  --secondary:       #0891B2;
+  --secondary-light: #E0F5F9;
+  --secondary-dark:  #0E7490;
+
+  /* Signature blue → cyan gradient for hero/CTA flourishes */
+  --accent-grad: linear-gradient(135deg, #115BA6 0%, #0E8FC0 55%, #06B6D4 100%);
+
+  --success:       #16A34A;
+  --success-bg:    #F0FDF4;
+  --success-light: #F0FDF4;
+  --warning:       #D97706;
+  --warning-bg:    #FFFBEB;
+  --error:         #DC2626;
+  --error-bg:      #FEF2F2;
+  --info:          #115BA6;
+  --info-bg:       #E7F0FA;
+  --text-inverse:  #FFFFFF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #999494;
+
+    --bg:            #111110;
+    --surface:       #1A1A19;
+    --surface-raised:#1E1E1C;
+    --border:        #2A2A27;
+    --border-strong: #3A3A36;
+    --text:          #F4F4F1;
+    --muted:         #8A8A84;
+    --faint:         #5A5A55;
+    --accent:        #3B9BE8;
+    --accent-light:  #102A42;
+    --accent-dark:   #6FB8F0;
+    --secondary:       #22D3EE;
+    --secondary-light: #0E2A33;
+    --secondary-dark:  #67E8F9;
+    --success-light: #0F2318;
+    --text-inverse:  #FFFFFF;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-dm-sans: var(--font-dm-sans);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pop { 0% { transform:scale(0.7); opacity:0; } 65% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }
+@keyframes confettiFall { 0% { transform:translateY(-10px) rotate(0deg); opacity:1; } 100% { transform:translateY(220px) rotate(720deg); opacity:0; } }
+@keyframes reactionPop { 0% { transform:scale(0) translateY(0); opacity:1; } 80% { transform:scale(1.4) translateY(-18px); opacity:0.9; } 100% { transform:scale(0) translateY(-28px); opacity:0; } }
+@keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(16px) scale(0.95); } to { opacity:1; transform:translateX(-50%) translateY(0) scale(1); } }
+@keyframes toastOut { from { opacity:1; transform:translateX(-50%) translateY(0) scale(1); } to { opacity:0; transform:translateX(-50%) translateY(8px) scale(0.95); } }
+@keyframes stepSlide { from { opacity:0; transform:translateX(18px); } to { opacity:1; transform:translateX(0); } }
+@keyframes wiggle { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-6deg); } 75% { transform:rotate(6deg); } }
+
+/* Loading skeleton — a sweeping shimmer (clearer "loading" signal than a pulse).
+   Uses theme tokens so it works in light/dark. Apply `.skeleton` to placeholders. */
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skeleton {
+  background-image: linear-gradient(90deg, var(--surface-raised) 0%, var(--border) 50%, var(--surface-raised) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
+
+.kudos-card { transition: box-shadow 0.15s, transform 0.15s; }
+.kudos-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.08); transform: translateY(-1px); }
+.confetti-piece { position: absolute; border-radius: 2px; }
+
+/* Hide a scrollbar while keeping the area scrollable (standard props only — the
+   ::-webkit-scrollbar variant is injected globally via the root layout's inline
+   <style> because Lightning CSS drops webkit scrollbar pseudo-elements here). */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
+@media print {
+  aside, nav, header, [data-sidebar], .print\:hidden { display: none !important; }
+  body { background: white !important; }
+  main { overflow: visible !important; }
+  .flex { display: block !important; }
+  .print\:block { display: block !important; }
+  * { box-shadow: none !important; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #ddd; padding: 6px 8px; font-size: 11px; }
+}
+
+/* ── Global multi-ring "atom" loader (Uiverse by Nawsome) — used by <Loader> ──
+   Defined here so it works in every scope (portal shell + all modules). */
+.pl__ring { animation: pl-ringA 2s linear infinite; }
+/* Rings adopt the surrounding scope's accent at varied opacity, so the loader
+   themes itself per module (CRM/HRMS/Pulse/…) while staying legible on light
+   and dark surfaces. Override --pl-accent to force a specific colour. */
+.pl__ring--a { stroke: var(--pl-accent, var(--accent, #115ba6)); }
+.pl__ring--b { animation-name: pl-ringB; stroke: color-mix(in srgb, var(--pl-accent, var(--accent, #115ba6)) 60%, transparent); }
+.pl__ring--c { animation-name: pl-ringC; stroke: color-mix(in srgb, var(--pl-accent, var(--accent, #115ba6)) 82%, transparent); }
+.pl__ring--d { animation-name: pl-ringD; stroke: color-mix(in srgb, var(--pl-accent, var(--accent, #115ba6)) 45%, transparent); }
+
+@keyframes pl-ringA {
+  from, 4% { stroke-dasharray: 0 660; stroke-width: 20; stroke-dashoffset: -330; }
+  12% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -335; }
+  32% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -595; }
+  40%, 54% { stroke-dasharray: 0 660; stroke-width: 20; stroke-dashoffset: -660; }
+  62% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -665; }
+  82% { stroke-dasharray: 60 600; stroke-width: 30; stroke-dashoffset: -925; }
+  90%, to { stroke-dasharray: 0 660; stroke-width: 20; stroke-dashoffset: -990; }
+}
+@keyframes pl-ringB {
+  from, 12% { stroke-dasharray: 0 220; stroke-width: 20; stroke-dashoffset: -110; }
+  20% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -115; }
+  40% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -195; }
+  48%, 62% { stroke-dasharray: 0 220; stroke-width: 20; stroke-dashoffset: -220; }
+  70% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -225; }
+  90% { stroke-dasharray: 20 200; stroke-width: 30; stroke-dashoffset: -305; }
+  98%, to { stroke-dasharray: 0 220; stroke-width: 20; stroke-dashoffset: -330; }
+}
+@keyframes pl-ringC {
+  from { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: 0; }
+  8% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -5; }
+  28% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -175; }
+  36%, 58% { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -220; }
+  66% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -225; }
+  86% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -395; }
+  94%, to { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -440; }
+}
+@keyframes pl-ringD {
+  from, 8% { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: 0; }
+  16% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -5; }
+  36% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -175; }
+  44%, 50% { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -220; }
+  58% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -225; }
+  78% { stroke-dasharray: 40 400; stroke-width: 30; stroke-dashoffset: -395; }
+  86%, to { stroke-dasharray: 0 440; stroke-width: 20; stroke-dashoffset: -440; }
+}
+@media (prefers-reduced-motion: reduce) { .pl__ring { animation-duration: 6s; } }
+
+/* TextType (React Bits) typewriter component */
+.text-type { display: inline-block; white-space: pre-wrap; }
+.text-type__cursor { margin-left: 0.25rem; display: inline-block; opacity: 1; }
+.text-type__cursor--hidden { display: none; }

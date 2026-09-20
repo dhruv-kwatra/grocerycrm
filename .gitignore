@@ -1,0 +1,39 @@
+# deps
+node_modules
+/node_modules
+
+# next
+/.next/
+/out/
+next-env.d.ts
+
+# env
+.env
+.env.*
+.env.local
+.env*.local
+*.env
+!.env*.example
+
+# python
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# misc
+*.tsbuildinfo
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# transient output
+.datetime-check/
+newui
+.gstack/
